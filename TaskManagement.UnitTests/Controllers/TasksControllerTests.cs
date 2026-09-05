@@ -19,38 +19,24 @@ public class TasksControllerTests
         _controller = new TasksController(_mockService.Object);  
     }
 
-    [Fact]  
-    public async Task GetById_TaskExiste_RetornaOk()  
+   [Fact]
+    public async Task GetAll_RetornaOkComListaDeTarefas()
     {
         // Arrange
-        var taskId = Guid.NewGuid();
-        var taskEsperada = new TaskItem { Id = taskId, Title = "Aprender xUnit" };  
+        var tarefasEsperadas = new List<TaskItem> 
+        { 
+            new TaskItem { Id = Guid.NewGuid(), Title = "Tarefa 1" },
+            new TaskItem { Id = Guid.NewGuid(), Title = "Tarefa 2" }
+        };
 
-        // Simulando o retorno do serviço
-        _mockService.Setup(s => s.GetByIdAsync(taskId)).ReturnsAsync(taskEsperada);  
-
-        // Act
-        var resultado = await _controller.GetById(taskId);  
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(resultado);  
-        var taskRetornada = Assert.IsType<TaskItem>(okResult.Value);  
-        Assert.Equal("Aprender xUnit", taskRetornada.Title);  
-    }
-
-    [Fact]  
-    public async Task GetById_TaskNaoExiste_RetornaNotFound()  
-    {
-        // Arrange
-        var taskId = Guid.NewGuid();
-
-        // Simulando a ausência do registro
-        _mockService.Setup(s => s.GetByIdAsync(taskId)).ReturnsAsync((TaskItem)null!);  
+        _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(tarefasEsperadas);
 
         // Act
-        var resultado = await _controller.GetById(taskId);  
+        var resultado = await _controller.GetAll();
 
         // Assert
-        Assert.IsType<NotFoundResult>(resultado);  
+        var okResult = Assert.IsType<OkObjectResult>(resultado);
+        var tarefasRetornadas = Assert.IsAssignableFrom<IEnumerable<TaskItem>>(okResult.Value);
+        Assert.Equal(2, tarefasRetornadas.Count());
     }
 }

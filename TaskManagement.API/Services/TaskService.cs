@@ -48,13 +48,11 @@ public class TaskService : ITaskService
         return task;
     }
 
-    public async Task<TaskItem?> GetByIdAsync(Guid id)
+    public async Task<IEnumerable<TaskItem>> GetAllAsync()
     {
-
-        using var activity = ActivitySource.StartActivity("GetTaskById");
-        activity?.SetTag("task.id", id.ToString());
+        using var activity = ActivitySource.StartActivity("GetAllTasks");
 
         await Task.Delay(100);
-        return _tasks.FirstOrDefault(t => t.Id == id);
+        return _tasks;
     }
 }

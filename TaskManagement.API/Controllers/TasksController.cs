@@ -15,15 +15,11 @@ public class TasksController : ControllerBase
         _service = service;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
     {
-        var task = await _service.GetByIdAsync(id);
-        
-        if (task == null)
-            return NotFound();
-
-        return Ok(task);
+        var tasks = await _service.GetAllAsync();
+        return Ok(tasks);
     }
 
     [HttpPost]

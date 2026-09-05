@@ -5,5 +5,5 @@ namespace TaskManagement.API.Interfaces;
 public interface ITaskService
 {
     Task<TaskItem> CreateTaskAsync(string title, string description);
-    Task<TaskItem?> GetByIdAsync(Guid id);
+    Task<IEnumerable<TaskItem>> GetAllAsync();
 }
