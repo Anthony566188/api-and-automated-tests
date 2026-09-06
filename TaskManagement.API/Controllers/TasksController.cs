@@ -1,8 +1,15 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.API.Entities;
 using TaskManagement.API.Interfaces;
 
 namespace TaskManagement.API.Controllers;
+
+// DTO para receber o Payload
+public record TaskInputModel(
+    [Required(ErrorMessage = "O título é obrigatório.")] string Title, 
+    string Description
+);
 
 [ApiController]
 [Route("[controller]")] 
@@ -23,9 +30,9 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTask(string title, string description)
+    public async Task<IActionResult> CreateTask([FromBody] TaskInputModel input)
     {
-        var task = await _service.CreateTaskAsync(title, description);
-        return Ok(task);
+        var task = await _service.CreateTaskAsync(input.Title, input.Description);
+        return Ok(task); 
     }
 }
